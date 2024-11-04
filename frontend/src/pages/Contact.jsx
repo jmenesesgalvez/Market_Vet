@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Contact = () => {
@@ -9,6 +10,8 @@ const Contact = () => {
         pregunta: '',
     });
 
+    const [mensaje, setMensaje] = useState('');
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -17,16 +20,28 @@ const Contact = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Datos del formulario:', formData);
-        // Lógica para enviar los datos a tu backend
+        try {
+            const response = await axios.post('http://localhost:5000/api/contact', formData);
+            setMensaje(response.data.message);
+            setFormData({
+                nombre: '',
+                telefono: '',
+                correo: '',
+                pregunta: '',
+            });
+        } catch (error) {
+            console.error('Error al enviar el formulario', error);
+            setMensaje('Hubo un error al enviar el formulario');
+        }
     };
 
     return (
         <div className="d-flex justify-content-center align-items-center vh-100">
             <div className="card p-4" style={{ maxWidth: '500px', width: '100%' }}>
                 <h2 className="text-center mb-4">Formulario de Contacto</h2>
+                {mensaje && <p className="alert alert-info text-center">{mensaje}</p>}
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
                         <label htmlFor="nombre" className="form-label">Nombre:</label>
@@ -84,5 +99,6 @@ const Contact = () => {
 };
 
 export default Contact;
+
 
 

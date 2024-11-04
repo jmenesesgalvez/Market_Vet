@@ -6,7 +6,7 @@ const Others = () => {
 
 export default Others; */
 
-// src/pages/Dogs.jsx
+// src/pages/Others.jsx
 import React from 'react';
 import { useAppContext } from '../context/AppContext';
 import 'bootstrap/dist/css/bootstrap.min.css';

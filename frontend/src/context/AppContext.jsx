@@ -1,18 +1,3 @@
-/* import React, { createContext, useState } from 'react';
-
-export const AppContext = createContext();
-
-export const AppProvider = ({ children }) => {
-    const [state, setState] = useState({});
-
-    return (
-        <AppContext.Provider value={[state, setState]}>
-            {children}
-        </AppContext.Provider>
-    );
-}; */
-
-// src/context/AppContext.jsx
 import React, { createContext, useContext, useState } from 'react';
 
 // Crear el contexto
@@ -25,8 +10,9 @@ export const useAppContext = () => {
 
 // Proveedor del contexto
 export const AppProvider = ({ children }) => {
-    const [cartItems, setCartItems] = useState([]);
-    const [totalAmount, setTotalAmount] = useState(0);
+    const [cartItems, setCartItems] = useState([]); // Elementos en el carrito
+    const [totalAmount, setTotalAmount] = useState(0); // Monto total
+    const [products, setProducts] = useState([]); // Estado para los productos
 
     // Función para agregar un producto al carrito
     const addToCart = (product) => {
@@ -34,12 +20,31 @@ export const AppProvider = ({ children }) => {
         setTotalAmount((prevTotal) => prevTotal + product.price);
     };
 
+    // Función para eliminar un producto del carrito
+    const removeFromCart = (productId) => {
+        const updatedItems = cartItems.filter(item => item.id !== productId);
+        const removedItem = cartItems.find(item => item.id === productId);
+        
+        setCartItems(updatedItems);
+        setTotalAmount((prevTotal) => prevTotal - (removedItem ? removedItem.price : 0));
+    };
+
+    // Función para limpiar el carrito
+    const clearCart = () => {
+        setCartItems([]);
+        setTotalAmount(0);
+    };
+
     return (
-        <AppContext.Provider value={{ cartItems, totalAmount, addToCart }}>
+        <AppContext.Provider value={{ cartItems, totalAmount, addToCart, removeFromCart, clearCart, products, setProducts }}>
             {children}
         </AppContext.Provider>
     );
 };
+
+export default AppContext;
+
+
 
 
 
