@@ -1,8 +1,8 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-console.log("DB_PASSWORD:", process.env.DB_PASSWORD); // Log para verificar el valor y el tipo
-console.log("Tipo de DB_PASSWORD:", typeof process.env.DB_PASSWORD); // Tipo de la variable
+console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
+console.log("Tipo de DB_PASSWORD:", typeof process.env.DB_PASSWORD);
 
 const pool = new Pool({
     user: process.env.DB_USER,

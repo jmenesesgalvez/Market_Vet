@@ -15,7 +15,7 @@ const Cats = () => {
             try {
                 const response = await axios.get('http://localhost:5000/api/products/cats');
                 setProducts(response.data);
-                setFilteredProducts(response.data); // Inicializa los productos filtrados
+                setFilteredProducts(response.data); 
             } catch (error) {
                 console.error('Error al cargar productos', error);
             }
@@ -26,14 +26,12 @@ const Cats = () => {
     useEffect(() => {
         let updatedProducts = [...products];
 
-        // Filtrar por categoría
         if (categoryFilter) {
             updatedProducts = updatedProducts.filter(
                 product => product.categoria === categoryFilter
             );
         }
 
-        // Filtrar por precio
         if (priceFilter === 'asc') {
             updatedProducts.sort((a, b) => a.precio - b.precio);
         } else if (priceFilter === 'desc') {

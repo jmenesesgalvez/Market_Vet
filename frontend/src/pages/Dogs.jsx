@@ -26,14 +26,12 @@ const Dogs = () => {
     useEffect(() => {
         let updatedProducts = [...products];
 
-        // Filtrar por categoría
         if (categoryFilter) {
             updatedProducts = updatedProducts.filter(
                 product => product.categoria === categoryFilter
             );
         }
 
-        // Filtrar por precio
         if (priceFilter === 'asc') {
             updatedProducts.sort((a, b) => a.precio - b.precio);
         } else if (priceFilter === 'desc') {

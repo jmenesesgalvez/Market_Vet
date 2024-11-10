@@ -8,16 +8,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Servir la carpeta "uploads" para que las imágenes sean accesibles públicamente
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Importar las rutas de productos y de contacto
 const productRoutes = require('./routes/productRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 
-// Configurar las rutas
 app.use('/api/products', productRoutes);
-app.use('/api', contactRoutes); // Ruta para manejar el formulario de contacto
+app.use('/api', contactRoutes); 
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

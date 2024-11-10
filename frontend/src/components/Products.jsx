@@ -1,4 +1,3 @@
-// src/pages/Products.jsx
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -6,7 +5,6 @@ const productsData = [
     { name: 'Producto A', supply: 'Comida', price: 15, imageUrl: 'https://via.placeholder.com/150' },
     { name: 'Producto B', supply: 'Juguete', price: 25, imageUrl: 'https://via.placeholder.com/150' },
     { name: 'Producto C', supply: 'Accesorio', price: 10, imageUrl: 'https://via.placeholder.com/150' },
-    // Agrega más productos aquí
 ];
 
 const Products = ({ sortType }) => {
