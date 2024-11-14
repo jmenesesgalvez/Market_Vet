@@ -1,62 +1,144 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '../context/UserContext';
 
-const Login = ({ setUser }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(false);
+const Login = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [mensaje, setMensaje] = useState('');
+    const [showResetPassword, setShowResetPassword] = useState(false);
+    const [newPassword, setNewPassword] = useState('');
+    const navigate = useNavigate();
+    const { setUser } = useUser();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-    
-    if (email === '' || password === '') {
-      setError(true);
-      return;
-    }
+        try {
+            const response = await axios.post('http://localhost:5000/api/users/login', {
+                email,
+                password
+            });
 
-    setError(false);
-    const loggedInUser = { email };
-    setUser(loggedInUser); 
-  };
+            localStorage.setItem('token', response.data.token);
+            setUser({ name: response.data.user.name });
+            setMensaje('Login exitoso');
+            navigate('/');
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                setMensaje('Credenciales incorrectas');
+            } else {
+                setMensaje('Error en el login');
+            }
+        }
+    };
 
-  return (
-    <div className="d-flex justify-content-center align-items-center vh-100">
-      <div className="card shadow" style={{ width: '22rem' }}>
-        <div className="card-body">
-          <h3 className="card-title text-center mb-4">Iniciar Sesión</h3>
-          <form onSubmit={handleLogin}>
-            <div className="form-group mb-3">
-              <label htmlFor="email">Correo Electrónico</label>
-              <input
-                type="email"
-                className="form-control"
-                id="email"
-                placeholder="Ingresa tu correo"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+    const handleResetPassword = async (e) => {
+        e.preventDefault();
+
+        try {
+            await axios.post('http://localhost:5000/api/users/reset-password', {
+                email,
+                newPassword
+            });
+            setMensaje('Contraseña actualizada exitosamente');
+            setShowResetPassword(false);
+            setEmail('');
+            setNewPassword('');
+        } catch (error) {
+            setMensaje('Error al actualizar la contraseña');
+        }
+    };
+
+    return (
+        <div className="container mt-5">
+            <div className="row justify-content-center">
+                <div className="col-md-6">
+                    <h2 className="text-center mb-4">{showResetPassword ? 'Restablecer Contraseña' : 'Iniciar Sesión'}</h2>
+                    
+                    {showResetPassword ? (
+                        <form onSubmit={handleResetPassword}>
+                            <div className="mb-3">
+                                <label className="form-label">Email</label>
+                                <input
+                                    type="email"
+                                    className="form-control"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Nueva Contraseña</label>
+                                <input
+                                    type="password"
+                                    className="form-control"
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <button type="submit" className="btn btn-primary w-100">
+                                Restablecer Contraseña
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-link w-100 mt-2"
+                                onClick={() => setShowResetPassword(false)}
+                            >
+                                Volver al Inicio de Sesión
+                            </button>
+                        </form>
+                    ) : (
+                        <form onSubmit={handleSubmit}>
+                            <div className="mb-3">
+                                <label className="form-label">Email</label>
+                                <input
+                                    type="email"
+                                    className="form-control"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Contraseña</label>
+                                <input
+                                    type="password"
+                                    className="form-control"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <button type="submit" className="btn btn-primary w-100">
+                                Iniciar Sesión
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-link w-100 mt-2"
+                                onClick={() => setShowResetPassword(true)}
+                            >
+                                ¿Olvidaste tu contraseña?
+                            </button>
+                        </form>
+                    )}
+
+                    {mensaje && (
+                        <div className="alert alert-info mt-3" role="alert">
+                            {mensaje}
+                        </div>
+                    )}
+                </div>
             </div>
-            <div className="form-group mb-3">
-              <label htmlFor="password">Contraseña</label>
-              <input
-                type="password"
-                className="form-control"
-                id="password"
-                placeholder="Ingresa tu contraseña"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            {error && <p className="text-danger">Por favor, completa todos los campos.</p>}
-            <button type="submit" className="btn btn-primary w-100">Ingresar</button>
-          </form>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Login;
+
+
+
+
 

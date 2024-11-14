@@ -33,11 +33,13 @@ export default Header; */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
+import { useUser } from '../context/UserContext'; // Importar el contexto de usuario
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FaDog, FaCat, FaHome, FaGift, FaShoppingCart, FaUser, FaUserPlus, FaPhone } from 'react-icons/fa';
+import { FaDog, FaCat, FaHome, FaGift, FaShoppingCart, FaUser, FaUserPlus, FaPhone, FaSignOutAlt } from 'react-icons/fa';
 
 const Header = () => {
     const { cartItems, totalAmount } = useAppContext();
+    const { user, logout } = useUser(); // Acceder al usuario y la función logout
 
     return (
         <header className="bg-primary text-white p-3 mb-4 shadow-sm" style={{ fontFamily: "'Poppins', sans-serif" }}>
@@ -59,7 +61,6 @@ const Header = () => {
                     <Link to="/cats" className="text-white mx-3 d-flex align-items-center text-decoration-none">
                         <FaCat className="me-1" /> Cats
                     </Link>
-                    {/* <Link to="/others" className="text-white mx-3 text-decoration-none">Others</Link> */}
                     <Link to="/promotions" className="text-white mx-3 d-flex align-items-center text-decoration-none">
                         <FaGift className="me-1" /> Promotions
                     </Link>
@@ -69,9 +70,22 @@ const Header = () => {
                     <Link to="/signup" className="text-white mx-3 d-flex align-items-center text-decoration-none">
                         <FaUserPlus className="me-1" /> Sign Up
                     </Link>
-                    <Link to="/login" className="text-white mx-3 d-flex align-items-center text-decoration-none">
-                        <FaUser className="me-1" /> Login
-                    </Link>
+
+                    {/* Mostrar el nombre del usuario y el botón de cerrar sesión si está autenticado */}
+                    {user ? (
+                        <>
+                            <span className="text-white mx-3 d-flex align-items-center">
+                                <FaUser className="me-1" /> Hola, {user.name}
+                            </span>
+                            <button onClick={logout} className="btn btn-outline-light mx-3 d-flex align-items-center">
+                                <FaSignOutAlt className="me-1" /> Cerrar Sesión
+                            </button>
+                        </>
+                    ) : (
+                        <Link to="/login" className="text-white mx-3 d-flex align-items-center text-decoration-none">
+                            <FaUser className="me-1" /> Login
+                        </Link>
+                    )}
                 </nav>
 
                 {/* Carrito */}
@@ -89,6 +103,8 @@ const Header = () => {
 };
 
 export default Header;
+
+
 
 
 
