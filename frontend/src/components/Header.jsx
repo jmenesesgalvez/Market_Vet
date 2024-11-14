@@ -33,13 +33,13 @@ export default Header; */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
-import { useUser } from '../context/UserContext'; // Importar el contexto de usuario
+import { useUser } from '../context/UserContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaDog, FaCat, FaHome, FaGift, FaShoppingCart, FaUser, FaUserPlus, FaPhone, FaSignOutAlt } from 'react-icons/fa';
 
 const Header = () => {
     const { cartItems, totalAmount } = useAppContext();
-    const { user, logout } = useUser(); // Acceder al usuario y la función logout
+    const { user, logout } = useUser();
 
     return (
         <header className="bg-primary text-white p-3 mb-4 shadow-sm" style={{ fontFamily: "'Poppins', sans-serif" }}>
@@ -71,7 +71,6 @@ const Header = () => {
                         <FaUserPlus className="me-1" /> Sign Up
                     </Link>
 
-                    {/* Mostrar el nombre del usuario y el botón de cerrar sesión si está autenticado */}
                     {user ? (
                         <>
                             <span className="text-white mx-3 d-flex align-items-center">
@@ -90,12 +89,14 @@ const Header = () => {
 
                 {/* Carrito */}
                 <div className="d-flex align-items-center">
-                    <FaShoppingCart className="me-2" />
-                    <div>
-                        <span className="fw-bold">Items: {cartItems.length}</span>
-                        <br />
-                        <span className="fw-bold">Total: ${totalAmount}</span>
-                    </div>
+                    <Link to="/cart" className="text-white mx-3 d-flex align-items-center text-decoration-none">
+                        <FaShoppingCart className="me-2" />
+                        <div>
+                            <span className="fw-bold">Items: {cartItems.length}</span>
+                            <br />
+                            <span className="fw-bold">Total: ${totalAmount}</span>
+                        </div>
+                    </Link>
                 </div>
             </div>
         </header>
@@ -103,6 +104,7 @@ const Header = () => {
 };
 
 export default Header;
+
 
 
 
